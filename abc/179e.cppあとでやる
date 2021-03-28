@@ -1,0 +1,20 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+int main(){
+    ll n,x,m;
+    cin >> n >> x >> m;
+    vector<int> ring;
+    int d = x % m;
+    int first = d;
+    ring.push_back(first);
+    while(1){
+        d *= x;
+        d %= m;
+        if(d != first)ring.push_back(d);
+        else break;
+    }
+    ll tmp = (2*n + 2 + ring.size() - 1) % ring.size();
+    ll x_2n_plus_2 = ring[tmp];
+    cout << (x_2n_plus_2 + m  - (x * x) % m) % m / (((x * x) % m + m  - 1) % m) << endl;
+}

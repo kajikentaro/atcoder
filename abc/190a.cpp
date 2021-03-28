@@ -1,0 +1,33 @@
+#include<bits/stdc++.h>
+#include<atcoder/modint>
+#define rep(x,y) for(int x=0;x<y;x++)
+#define rrep(x,y) for(int x=y-1;x>=0;x--)
+#define ll long long
+template<class T>bool chmax(T &a, const T &b) { if (a<b) { a=b; return 1; } return 0; }
+template<class T>bool chmin(T &a, const T &b) { if (b<a) { a=b; return 1; } return 0; }
+using namespace std;
+using namespace atcoder;
+using mint = modint1000000007;
+int func(){
+    int a,b,c;
+    cin >> a >> b >> c;
+    if(a > b){
+        return 1;//takahashi
+    }
+    if(b > a){
+        return 0;//aoki
+    }
+    if(c){
+        if(a == b){
+            return 1;
+        }
+    }else{
+        if(a == b){
+            return 0;//aoki
+        }
+    }
+    return 0;
+}
+int main(){
+    cout << (func() ? "Takahashi" : "Aoki") << endl;
+}

@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "*.erb": "erb",
+        "ostream": "cpp",
+        "tuple": "cpp"
+    }
+}
