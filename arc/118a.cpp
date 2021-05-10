@@ -11,4 +11,7 @@ using namespace atcoder;
 using mint = modint1000000007;
 using P = pair<int,int>;
 int main(){
+    ll t,n;
+    cin >> t >> n;
+    cout << ((n * 100 + t - 1) / t * (100 + t) / 100) - 1 << endl;
 }

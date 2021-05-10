@@ -10,8 +10,28 @@ using namespace std;
 using namespace atcoder;
 using mint = modint1000000007;
 using P = pair<int,int>;
+int func(){
+    string s;
+    cin >> s;
+    int front = 0;
+    int end = s.size() - 1;
+    while(s[end] == '0'){
+        end--;
+    }
+    while(1){
+        if(front >= end)return true;
+        if(s[front] == s[end]){
+            front++;
+            end--;
+        }else{
+            return false;
+        }
+    }
+}
 int main(){
-    int n;
-    cin >> n;
-    cout << n - 1 << endl;
+    if(func()){
+        cout << "Yes" << endl;
+    }else{
+        cout << "No" << endl;
+    }
 }

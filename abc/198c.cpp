@@ -11,7 +11,12 @@ using namespace atcoder;
 using mint = modint1000000007;
 using P = pair<int,int>;
 int main(){
-    int n;
-    cin >> n;
-    cout << n - 1 << endl;
+    double R,X,Y;
+
+    cin >> R >> X >> Y;
+
+    double distance = sqrt(X * X + Y * Y);
+    int ans = ceil(distance / R);
+
+    cout << ans << endl;
 }
