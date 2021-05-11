@@ -10,13 +10,15 @@ using namespace std;
 using namespace atcoder;
 using mint = modint1000000007;
 using P = pair<int,int>;
-int main(){
+string func(){
     int m,h;
     cin >> m >> h;
     if(h % m == 0){
-        cout << "Yes" << endl;
+        return "Yes";
     }else{
-        cout << "No" << endl;
+        return "No";
     }
-    return 0;
+}
+int main(){
+    cout << func() << endl;
 }

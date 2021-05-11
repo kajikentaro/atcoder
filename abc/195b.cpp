@@ -14,19 +14,12 @@ int main(){
     int a,b,w;
     cin >> a >> b >> w;
     w *= 1000;
-    int min_v = 1e9;
-    int max_v = 0;
-    orep(i,1e6){
-        int mi = a * i;
-        int ma = b * i;
-        if(mi <= w && w <= ma){
-            chmin(min_v, i);
-            chmax(max_v , i);
-        }
-    }
-    if(min_v == 1e9){
+    int min_v = (w + b - 1)/ b;
+    int max_v = w / a;
+    if(min_v > max_v){
         cout << "UNSATISFIABLE" << endl;
     }else{
-        cout << min_v << " " << max_v << endl;
+        cout << min_v << endl;
+        cout << max_v << endl;
     }
 }

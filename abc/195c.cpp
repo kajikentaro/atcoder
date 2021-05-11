@@ -11,11 +11,19 @@ using namespace atcoder;
 using mint = modint1000000007;
 using P = pair<int,int>;
 int main(){
-    string n;
-    cin >> n; 
-    int k = n.size();
-    reverse(n.begin(), n.end()):
-    for(int i=0;i<k;i+=3){
-
+    ll n;
+    cin >> n;
+    ll magic[5];
+    magic[0] = 1e3;
+    magic[1] = 1e6;
+    magic[2] = 1e9;
+    magic[3] = 1e12;
+    magic[4] = 1e15;
+    ll ans = 0;
+    for(ll m : magic){
+        if(n >= m){
+            ans += n - m + 1;
+        }
     }
+    cout << ans << endl;
 }
