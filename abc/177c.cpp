@@ -11,18 +11,19 @@ using namespace atcoder;
 using mint = modint1000000007;
 using P = pair<int,int>;
 int main(){
-    int n,m;
-    cin >> n >> m;
-    dsu uf(n);
-    rep(i,m){
-        int a,b;
-        cin >> a >> b;
-        a--;b--;
-        uf.merge(a,b);
+    int n;
+    cin >> n;
+    vector<int> a(n);
+    rep(i,n)cin >> a[i];
+    vector<ll> b(n);
+    b[0] = a[0];
+    rep(i,n){
+        if(i==0)continue;
+        b[i] = b[i-1] + a[i];
     }
-    int max_total = 0;
-    for(auto i : uf.groups()){
-        chmax(max_total, (int)i.size());
+    mint ans = 0;
+    rep(i,n){
+        ans += (mint)a[i] * (b[n-1] - b[i]);
     }
-    cout << max_total << endl;
+    cout << ans.val() << endl;
 }

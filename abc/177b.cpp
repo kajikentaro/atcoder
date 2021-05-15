@@ -11,18 +11,18 @@ using namespace atcoder;
 using mint = modint1000000007;
 using P = pair<int,int>;
 int main(){
-    int n,m;
-    cin >> n >> m;
-    dsu uf(n);
-    rep(i,m){
-        int a,b;
-        cin >> a >> b;
-        a--;b--;
-        uf.merge(a,b);
+    string s,t;
+    cin >> s >> t;
+    int ss = s.size(), ts = t.size();
+    int min_v = 1e9;
+    rep(i,ss){
+        int same_cnt = 0;
+        if(i + ts - 1 >= ss)break;
+        rep(j,ts){
+            //s[i] ~ 
+            if(s[i + j] == t[j])same_cnt++;
+        }
+        chmin(min_v, ts - same_cnt);
     }
-    int max_total = 0;
-    for(auto i : uf.groups()){
-        chmax(max_total, (int)i.size());
-    }
-    cout << max_total << endl;
+    cout << min_v << endl;
 }

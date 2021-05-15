@@ -11,18 +11,17 @@ using namespace atcoder;
 using mint = modint1000000007;
 using P = pair<int,int>;
 int main(){
-    int n,m;
-    cin >> n >> m;
-    dsu uf(n);
-    rep(i,m){
-        int a,b;
-        cin >> a >> b;
-        a--;b--;
-        uf.merge(a,b);
+    string s;
+    cin >> s;
+    string t = "ZONe";
+    int ans = 0;
+    rep(i,s.size()){
+        int c = 0;
+        rep(j,t.size()){
+            if(i+j >= s.size())break;
+            if(t[j] == s[i+j])c++;
+        }
+        if(c == 4)ans++;
     }
-    int max_total = 0;
-    for(auto i : uf.groups()){
-        chmax(max_total, (int)i.size());
-    }
-    cout << max_total << endl;
+    cout << ans << endl;
 }

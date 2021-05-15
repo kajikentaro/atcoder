@@ -13,16 +13,24 @@ using P = pair<int,int>;
 int main(){
     int n,m;
     cin >> n >> m;
-    dsu uf(n);
+    vector<vector<int>> path(n);
     rep(i,m){
         int a,b;
         cin >> a >> b;
         a--;b--;
-        uf.merge(a,b);
+        path[a].push_back(a);
+        path[b].push_back(a);
     }
-    int max_total = 0;
-    for(auto i : uf.groups()){
-        chmax(max_total, (int)i.size());
+    int max = 0;
+    rep(i,n){
+        set<int> friends;
+        for(auto p : path[i]){
+            friends.insert(p);
+            for(auto q : path[p]){
+                friends.insert(q);
+            }
+        }
+        chmax(max, (int)friends.size());
     }
-    cout << max_total << endl;
+    cout << max + 1 << endl;
 }

@@ -11,18 +11,12 @@ using namespace atcoder;
 using mint = modint1000000007;
 using P = pair<int,int>;
 int main(){
-    int n,m;
-    cin >> n >> m;
-    dsu uf(n);
-    rep(i,m){
-        int a,b;
-        cin >> a >> b;
-        a--;b--;
-        uf.merge(a,b);
+    vector<int> input(3);
+    rep(i,3)cin >> input[i];
+    sort(input.begin(), input.end());
+    if(input[2] - input[1] == input[1] - input[0]){
+        cout << "Yes" << endl;
+    }else{
+        cout << "No" << endl;
     }
-    int max_total = 0;
-    for(auto i : uf.groups()){
-        chmax(max_total, (int)i.size());
-    }
-    cout << max_total << endl;
 }
