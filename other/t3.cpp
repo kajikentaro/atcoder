@@ -10,19 +10,35 @@ using namespace std;
 using namespace atcoder;
 using mint = modint1000000007;
 using P = pair<int,int>;
-int main(){
-    int h,w;
-    cin >> h >> w;
-    vector<vector<int>> a(h,vector<int>(w));
-    rep(i,h)rep(j,w)cin >> a[i][j];
-    vector<int> h_sum(h), w_sum(w);
-    rep(i,h)rep(j,w)h_sum[i] += a[i][j];
-    rep(i,h)rep(j,w)w_sum[j] += a[i][j];
-    rep(i,h){
-        rep(j,w){
-            int ans = h_sum[i] + w_sum[j] - a[i][j];
-            cout << ans << " ";
-        }
-        cout << endl;
+vector<int> used;
+vector<vector<int>> path;
+int max_depth = 0;
+int max_depth_idx = 0;
+void dfs(int p, int depth){
+    if(used[p])return;
+    if(chmax(max_depth, depth))max_depth_idx = p;
+    used[p] = 1;
+    for(auto i : path[p]){
+        dfs(i,depth+1);
     }
+}
+int main(){
+    int n;
+    cin >> n;
+    path.resize(n);
+    used.resize(n);
+    rep(i,n-1){
+        int a,b;
+        cin >> a >> b;
+        a--;b--;
+        path[a].push_back(b);
+        path[b].push_back(a);
+    }
+    dfs(0,0);
+    int deepest = max_depth_idx;
+    max_depth_idx = 0;
+    max_depth = 0;
+    rep(i,n)used[i] = 0;
+    dfs(deepest,0);
+    cout << max_depth + 1 << endl;
 }

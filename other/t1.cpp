@@ -11,29 +11,26 @@ using namespace atcoder;
 using mint = modint1000000007;
 using P = pair<int,int>;
 int main(){
+    #define int long long
     int n,l,k;
     cin >> n >> l >> k;
     vector<int> a(n);
     rep(i,n)cin >> a[i];
-
-    a.push_back(l);
-    n++;
-
-    int ac = 1;
-    int wa = 1e9;
+    ll ac = 0;
+    ll inf = 1e9;
+    ll wa = inf;
     while(wa - ac != 1){
-        int wj = (ac + wa) / 2;
-
+        int wj = (wa + ac) / 2;
         int pre_cut = 0;
-        int cut_cnt_left = k+1;
+        int cut_cnt = 0;
         rep(i,n){
-            int now_length = a[i] - pre_cut;
-            if(now_length >= wj){
+            if(a[i] - pre_cut >= wj){
                 pre_cut = a[i];
-                cut_cnt_left--;
+                cut_cnt++;
             }
         }
-        if(cut_cnt_left <= 0)ac = wj;
+        if(l - pre_cut < wj)cut_cnt--;
+        if(cut_cnt >= k)ac = wj;
         else wa = wj;
     }
     cout << ac << endl;
