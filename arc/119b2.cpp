@@ -10,38 +10,33 @@ using namespace std;
 using namespace atcoder;
 using mint = modint1000000007;
 using P = pair<int,int>;
-int gcd(int x, int y) {
-    if(x % y == 0) {
-        return y;
-    } else {
-        return gcd(y, x % y); 
-    }
-}
-int lcm(int a, int b){
-  return a*b / gcd(a, b);
-}
-int func(){
+vector<bool> skip;
+vector<int> s;
+vector<int> t;
+int main(){
+    #define int long long
     int n;
     cin >> n;
-    vector<int> x(n);
+    string s,t;
+    cin >> s >> t;
+    vector<int> s_pos;
+    vector<int> t_pos;
     rep(i,n){
-        cin >> x[i];
-    }
-    rep(i,1e6){
-        if(i <= 1)continue;
-        bool flag = true;
-        rep(j,n){
-            int g = gcd(x[j],i);
-            if(g == 1){
-                flag = false;
-                break;
-            }
+        if(s[i] == '0'){
+            s_pos.push_back(i);
         }
-        if(flag){
-            return i;
+        if(t[i] == '0'){
+            t_pos.push_back(i);
         }
     }
-}
-int main(){
-    cout << func() << endl;
+    if(s_pos.size() != t_pos.size()){
+        cout << -1 << endl;
+        return 0;
+    }
+    int m = s_pos.size();
+    int ans = 0;
+    rep(i,m){
+        if(s_pos[i] != t_pos[i])ans++;
+    }
+    cout << ans << endl;
 }
