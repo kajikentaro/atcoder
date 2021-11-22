@@ -10,33 +10,30 @@ using namespace std;
 using namespace atcoder;
 using mint = modint1000000007;
 using P = pair<int,int>;
+int gcd(int a,int b){
+  if(a % b == 0)return b;
+  return gcd(b, a%b);
+}
 int main(){
-  int q;
-  cin >> q;
-  set<int> se;
-  int n = 1<<20;
+  int n;
+  cin >> n;
+  vector<P> input(n);
+  rep(i,n)cin >> input[i].first >> input[i].second;
   rep(i,n){
-    se.insert(i);
-  }
-  map<int, ll> ma;
-  rep(i,q){
-    int t;
-    ll x;
-    cin >> t >> x;
-    int xx = x % n;
-    if(t == 1){
-      auto s = se.lower_bound(xx);
-      if(s == se.end()){
-        s = se.lower_bound(0);
-      }
-      ma[*s] = x;
-      se.erase(*s);
-    }else{
-      if(ma.count(xx) == 1){
-        cout << ma[xx] << endl;
-      }else{
-        cout << -1 << endl;
-      }
+    map<P,int> ma;
+    rep(j,n){
+      if(i == j)continue;
+      int x = input[j].first - input[i].first;
+      int y = input[j].second - input[i].second;
+      int k = gcd(x,y);
+      x /= k;
+      y /= k;
+      ma[P(x,y)]++;
+    }
+    ll gn = ma.size();
+    ll ans = gn * (gn - 1) / 2;
+    for(auto m : ma){
+      ans *= m.second;
     }
   }
 }

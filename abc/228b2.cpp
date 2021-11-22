@@ -11,32 +11,21 @@ using namespace atcoder;
 using mint = modint1000000007;
 using P = pair<int,int>;
 int main(){
-  int q;
-  cin >> q;
-  set<int> se;
-  int n = 1<<20;
-  rep(i,n){
-    se.insert(i);
+  int n,x;
+  cin >> n >> x;
+  x--;
+  vector<int> a(n);
+  rep(i,n)cin >> a[i];
+  rep(i,n)a[i]--;
+  vector<int> used(n);
+  int c = x;
+  int ans = 0;
+  while(1){
+    if(used[c])break;
+    used[c] = 1;
+    c = a[c];
+    ans++;
   }
-  map<int, ll> ma;
-  rep(i,q){
-    int t;
-    ll x;
-    cin >> t >> x;
-    int xx = x % n;
-    if(t == 1){
-      auto s = se.lower_bound(xx);
-      if(s == se.end()){
-        s = se.lower_bound(0);
-      }
-      ma[*s] = x;
-      se.erase(*s);
-    }else{
-      if(ma.count(xx) == 1){
-        cout << ma[xx] << endl;
-      }else{
-        cout << -1 << endl;
-      }
-    }
-  }
+  cout << ans << endl;
+
 }

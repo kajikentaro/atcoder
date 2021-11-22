@@ -11,32 +11,33 @@ using namespace atcoder;
 using mint = modint1000000007;
 using P = pair<int,int>;
 int main(){
-  int q;
-  cin >> q;
-  set<int> se;
-  int n = 1<<20;
+  int n,k;
+  cin >> n >> k;
+  vector<int> p(n);
+  vector<int> p_backup(n);
   rep(i,n){
-    se.insert(i);
+    int a,b,c;
+    cin >> a >> b >> c;
+    p[i] = a + b + c;
+    p_backup[i] = a + b + c;
   }
-  map<int, ll> ma;
-  rep(i,q){
-    int t;
-    ll x;
-    cin >> t >> x;
-    int xx = x % n;
-    if(t == 1){
-      auto s = se.lower_bound(xx);
-      if(s == se.end()){
-        s = se.lower_bound(0);
-      }
-      ma[*s] = x;
-      se.erase(*s);
-    }else{
-      if(ma.count(xx) == 1){
-        cout << ma[xx] << endl;
+  sort(p.rbegin(), p.rend());
+  rep(i,n){
+    int wa = -1;
+    int ac = n-1;
+    while(ac - wa != 1){
+      int wj = (wa + ac + 1) / 2;
+      if(p[wj] <= p_backup[i] + 300){
+        ac = wj;
       }else{
-        cout << -1 << endl;
+        wa = wj;
       }
+    }
+    int possible_rank = ac + 1;
+    if(possible_rank <= k){
+      cout << "Yes" << endl;
+    }else{
+      cout << "No" << endl;
     }
   }
 }

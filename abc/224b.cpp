@@ -11,32 +11,17 @@ using namespace atcoder;
 using mint = modint1000000007;
 using P = pair<int,int>;
 int main(){
-  int q;
-  cin >> q;
-  set<int> se;
-  int n = 1<<20;
-  rep(i,n){
-    se.insert(i);
-  }
-  map<int, ll> ma;
-  rep(i,q){
-    int t;
-    ll x;
-    cin >> t >> x;
-    int xx = x % n;
-    if(t == 1){
-      auto s = se.lower_bound(xx);
-      if(s == se.end()){
-        s = se.lower_bound(0);
-      }
-      ma[*s] = x;
-      se.erase(*s);
-    }else{
-      if(ma.count(xx) == 1){
-        cout << ma[xx] << endl;
-      }else{
-        cout << -1 << endl;
-      }
+  int h,w;
+  cin >> h >> w;
+  vector<vector<int>> k(h,vector<int>(w));
+  rep(i,h)rep(j,w)cin >> k[i][j];
+  rep(i2,h)rep(i1,i2){
+    //b << a
+    rep(j2,w)rep(j1,j2){
+      if(k[i1][j1] + k[i2][j2] <= k[i2][j1] + k[i1][j2])continue;
+      cout << "No" << endl;
+      return 0;
     }
   }
+  cout << "Yes" << endl;
 }
