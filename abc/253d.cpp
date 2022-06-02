@@ -17,14 +17,20 @@ using namespace std;
 using namespace atcoder;
 using mint = modint1000000007;
 using P = pair<int, int>;
+int gcd(int a, int b) {
+  if (a % b == 0) return b;
+  return gcd(b, a % b);
+}
+int lcm(int a, int b) { return a * b / gcd(a, b); }
 ll sum(ll n, ll a) { return n * a * (n + 1) / 2; }
 int main() {
   ll n, a, b;
   cin >> n >> a >> b;
+  ll ab = lcm(a, b);
   ll n_sum = sum(n, 1);
   ll a_sum = sum(n / a, a);
   ll b_sum = sum(n / b, b);
-  ll ab_sum = sum(n / (a * b), a * b);
+  ll ab_sum = sum(n / ab, ab);
   ll ans = n_sum - a_sum - b_sum + ab_sum;
   cout << ans << endl;
 }

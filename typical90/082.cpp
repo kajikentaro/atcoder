@@ -17,8 +17,8 @@ using namespace std;
 using namespace atcoder;
 using mint = modint1000000007;
 using P = pair<int, int>;
-int keta(mint a) {
-  string b = to_string(a.val());
+int keta(ll a) {
+  string b = to_string(a);
   return b.size();
 }
 mint keta_pow(int keta) {
@@ -27,10 +27,8 @@ mint keta_pow(int keta) {
   return a;
 }
 int main() {
-  ll a, b;
-  cin >> a >> b;
-  mint l = a;
-  mint r = b;
+  ll l, r;
+  cin >> l >> r;
 
   mint ans = 0;
   for (int i = keta(l); i <= keta(r); i++) {
