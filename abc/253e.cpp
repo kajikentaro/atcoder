@@ -41,6 +41,10 @@ int main() {
 
     vector<ll> dp_sum = calc_sum(dp_old);
     orep(j, m) {
+      if (k == 0) {
+        dp[j] = dp_sum[m];
+        continue;
+      }
       if (j + k <= m) {
         dp[j] = (dp_sum[m] - dp_sum[j + k - 1] + mod) % mod;
       }
