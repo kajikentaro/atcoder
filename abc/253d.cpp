@@ -17,3 +17,14 @@ using namespace std;
 using namespace atcoder;
 using mint = modint1000000007;
 using P = pair<int, int>;
+ll sum(ll n, ll a) { return n * a * (n + 1) / 2; }
+int main() {
+  ll n, a, b;
+  cin >> n >> a >> b;
+  ll n_sum = sum(n, 1);
+  ll a_sum = sum(n / a, a);
+  ll b_sum = sum(n / b, b);
+  ll ab_sum = sum(n / (a * b), a * b);
+  ll ans = n_sum - a_sum - b_sum + ab_sum;
+  cout << ans << endl;
+}

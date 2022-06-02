@@ -17,3 +17,14 @@ using namespace std;
 using namespace atcoder;
 using mint = modint1000000007;
 using P = pair<int, int>;
+int main() {
+  vector<int> a(3);
+  rep(i, 3) cin >> a[i];
+  int b = a[1];
+  sort(a.begin(), a.end());
+  if (b == a[1]) {
+    cout << "Yes" << endl;
+  } else {
+    cout << "No" << endl;
+  }
+}

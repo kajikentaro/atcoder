@@ -17,3 +17,19 @@ using namespace std;
 using namespace atcoder;
 using mint = modint1000000007;
 using P = pair<int, int>;
+int main() {
+  int h, w;
+  cin >> h >> w;
+  vector<string> grid(h);
+  rep(i, h) cin >> grid[i];
+  vector<P> item;
+  rep(i, h) rep(j, w) {
+    if (grid[i][j] == 'o') {
+      item.emplace_back(i, j);
+    }
+  }
+  int ans = 0;
+  ans += abs(item[0].first - item[1].first);
+  ans += abs(item[0].second - item[1].second);
+  cout << ans << endl;
+}
