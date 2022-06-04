@@ -1,6 +1,8 @@
 *
 !*/
-!*.*
+!*/**/*.*
 .vscode/
 !ac
+!ac_template.cpp
+!.gitignore
 a.out
