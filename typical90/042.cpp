@@ -26,21 +26,17 @@ using namespace atcoder;
 using mint = modint1000000007;
 using P = pair<int, int>;
 int main() {
-  int n;
-  cin >> n;
-  int grid[1010][1010] = {};
-  rep(i, n) {
-    int sx, sy, dx, dy;
-    cin >> sx >> sy >> dx >> dy;
-    grid[sx][sy]++;
-    grid[dx][dy]--;
+  ll k;
+  ll mod = (ll)1e9 + 7;
+  cin >> k;
+  vector<ll> dp(k + 20);
+  dp[0] = 1;
+  if (k % 9 != 0) {
+    cout << 0 << endl;
+    return 0;
   }
-  int now = 0;
-
-  int k[100010] = {};
-  rep(i, 1005) rep(j, 1005) {
-    now += grid[i][j];
-    k[now]++;
+  rep(i, k + 10) {
+    orep(j, 9) { dp[i + j] = (dp[i + j] + dp[i]) % mod; }
   }
-  orep(i, n) { cout << k[i] << endl; }
+  cout << dp[k] << endl;
 }
