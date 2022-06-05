@@ -87,20 +87,38 @@ int main() {
   ll n, k;
   cin >> n >> k;
   vector<Point> points(n);
-  // 点を入力
   rep(i, n) cin >> points[i].x >> points[i].y;
 
-  // 線分とその個数を列挙する
   map<Line, ll> lines;
   for (ll i = 0; i < n; i++) {
     for (ll j = i + 1; j < n; j++) {
-      Line res = calc_line(points[i], points[j]);
-      lines[res]++;
+      Line l = calc_line(points[i], points[j]);
+      lines[l]++;
     }
   }
+
+  vector<ll> rev_note(90010, -1);
+  orep(i, 300) {
+    ll x = i * (i - 1) / 2;
+    rev_note[x] = i;
+  }
+
+  // [i個の点を通る][線の個数]
+  map<ll, ll> res;
+  for (auto l : lines) {
+    ll poll_num = rev_note[l.second];
+    assert(poll_num != -1);
+    res[poll_num]++;
+  }
+
+  ll ans = 0;
+  for (auto r : res) {
+    if (r.first >= k) ans += r.second;
+  }
+
+  if (k == 1) {
+    cout << "Infinity" << endl;
+  } else {
+    cout << ans << endl;
+  }
 }
-/*
-この問題とは関係ないが、3点が同一線上にあるかどうかは、
-(x_1 - x_0) * (y_2 - y_0) == (x_2 - x_0) * (y_1 - y_0)
-でわかる
-*/
