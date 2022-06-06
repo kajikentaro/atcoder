@@ -18,30 +18,12 @@ using namespace atcoder;
 using mint = modint1000000007;
 using P = pair<int, int>;
 int main() {
-<<<<<<< HEAD:typical90/042.cpp
-  ll k;
-  ll mod = (ll)1e9 + 7;
-  cin >> k;
-  vector<ll> dp(k + 20);
-  dp[0] = 1;
-  if (k % 9 != 0) {
-    cout << 0 << endl;
-    return 0;
-  }
-  rep(i, k + 10) {
-    orep(j, 9) { dp[i + j] = (dp[i + j] + dp[i]) % mod; }
-  }
-  cout << dp[k] << endl;
-}
-=======
-  vector<int> a(3);
-  rep(i, 3) cin >> a[i];
-  int b = a[1];
-  sort(a.begin(), a.end());
-  if (b == a[1]) {
-    cout << "Yes" << endl;
+  int n;
+  cin >> n;
+  int a = n % 100;
+  if (a <= 9) {
+    cout << "0" << a << endl;
   } else {
-    cout << "No" << endl;
+    cout << a << endl;
   }
 }
->>>>>>> 46143fa18b634a19f9d5ad74c099ec9113724ba5:abc/253a.cpp
