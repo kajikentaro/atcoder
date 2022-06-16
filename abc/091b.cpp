@@ -18,9 +18,25 @@ using namespace atcoder;
 using mint = modint1000000007;
 using P = pair<int, int>;
 int main() {
-  int n;
-  cin >> n;
-  double ans = 0;
-  orep(i, n - 1) { ans += (double)n / (n - i); }
-  printf("%.7lf\n", ans);
+  int n, k;
+  cin >> n >> k;
+  ll ans = 0;
+  orep(b, n) {
+    ll res_per_group = b - k;
+    if (res_per_group <= 0) continue;
+
+    ll group_len = n / b;
+    ll ans1 = group_len * res_per_group;
+    ans += ans1;
+
+    ll surplus_len = n % b;
+    if (k == 0) {
+      ans += surplus_len++;
+      continue;
+    }
+    if (surplus_len <= k - 1) continue;
+    ll ans2 = surplus_len - (k - 1);
+    ans += ans2;
+  }
+  cout << ans << endl;
 }
