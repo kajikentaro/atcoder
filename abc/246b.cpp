@@ -17,10 +17,3 @@ using namespace std;
 using namespace atcoder;
 using mint = modint1000000007;
 using P = pair<int, int>;
-int main() {
-  int n;
-  cin >> n;
-  double ans = 0;
-  orep(i, n - 1) { ans += (double)n / (n - i); }
-  printf("%.7lf\n", ans);
-}

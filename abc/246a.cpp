@@ -18,9 +18,22 @@ using namespace atcoder;
 using mint = modint1000000007;
 using P = pair<int, int>;
 int main() {
-  int n;
-  cin >> n;
-  double ans = 0;
-  orep(i, n - 1) { ans += (double)n / (n - i); }
-  printf("%.7lf\n", ans);
+  map<int, int> x_list;
+  map<int, int> y_list;
+  rep(i, 3) {
+    int x, y;
+    cin >> x >> y;
+    x_list[x]++;
+    y_list[y]++;
+  }
+  for (auto x : x_list) {
+    if (x.second == 1) {
+      cout << x.first << " ";
+    }
+  }
+  for (auto y : y_list) {
+    if (y.second == 1) {
+      cout << y.first << endl;
+    }
+  }
 }
