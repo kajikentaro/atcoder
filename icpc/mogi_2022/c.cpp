@@ -20,24 +20,25 @@ using P = pair<int, int>;
 vector<string> s_list;
 int n;
 bool is_unique(string target, int start, int last) {
-  set<int> candidate_idx;
-  rep(i, n) candidate_idx.insert(i);
-  for (const int c : candidate_idx) {
+  set<string> can;
+  set<string> ng_can;
+  for (auto s : s_list) can.insert(s);
+  for (auto c : can) {
     // different length
-    if (s_list[c].size() != target.size()) candidate_idx.erase(c);
+    if (c.size() != target.size()) ng_can.insert(c);
   }
   rep(i, start) {
     // different first side
-    for (auto c : candidate_idx) {
-      if (s_list[c][i] != target[i]) candidate_idx.erase(c);
+    for (auto c : can) {
+      if (c[i] != target[i]) ng_can.insert(c);
     }
   }
   for (int i = last + 1; i < target.size(); i++) {
-    for (auto c : candidate_idx) {
-      if (s_list[c][i] != target[i]) candidate_idx.erase(c);
+    for (auto c : can) {
+      if (c[i] != target[i]) ng_can.insert(c);
     }
   }
-  return candidate_idx.size() == 1;
+  return can.size() - ng_can.size() == 1;
 }
 bool func() {
   cin >> n;
@@ -48,15 +49,17 @@ bool func() {
 
   ll ans = 0;
   for (auto s : s_list) {
+    ll s_ans = 0;
     // max 30
-    for (int start = 1; start < s.size(); start++) {
+    for (int start = 1; start < s.size() - 1; start++) {
       // max 30
-      for (int last = start; last < s.size(); last++) {
+      for (int last = start; last < s.size() - 1; last++) {
         if (is_unique(s, start, last)) {
-          ans += last - start + 1;
+          chmax(s_ans, (ll)last - start + 1);
         }
       }
     }
+    ans += s_ans;
   }
   cout << ans << endl;
   return true;
