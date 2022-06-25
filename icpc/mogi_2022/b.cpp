@@ -29,8 +29,8 @@ bool func() {
   vector<ll> a(n);
   rep(i, n) a[i] = tmp[i] - '0';
 
-  vector<vector<ll>> dp(n, vector<ll>(k));
   const ll INF = (ll)-1e18;
+  vector<vector<ll>> dp(n, vector<ll>(k, INF));
 
   auto get = [&](ll ni, ll ki) {
     if (ni == -1 && ki == k - 1) return 0ll;
@@ -46,7 +46,6 @@ bool func() {
         } else {
           new_val = get(ni - c, ki - 1) + a[ni] * (ll)pow(10, k - ki - 1);
         }
-        if (new_val < 0) continue;
         chmax(dp[ni][ki], new_val);
       }
     }
