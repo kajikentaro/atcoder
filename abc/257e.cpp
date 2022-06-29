@@ -49,6 +49,5 @@ int main() {
       }
     }
   }
-  rrep(i, dp[n].size()) { cout << dp[n][i]; }
-  cout << endl;
+  dfs(0, )
 }
