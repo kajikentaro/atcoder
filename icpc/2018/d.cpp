@@ -17,11 +17,11 @@ using namespace std;
 using namespace atcoder;
 using mint = modint1000000007;
 using P = pair<int, int>;
-const int WIN = 1;
-const int LOSE = 2;
+const char WIN = 1;
+const char LOSE = 2;
 int n;
 
-ll dfs(vector<vector<int>> old_table, vector<int> must_win_old, int hi) {
+ll dfs(vector<vector<char>> old_table, vector<int> must_win_old, int hi) {
   ll ans = 0;
   if (hi == n) {
     return 1;
@@ -65,7 +65,7 @@ ll dfs(vector<vector<int>> old_table, vector<int> must_win_old, int hi) {
 bool func() {
   cin >> n;
   if (n == 0) return false;
-  vector<vector<int>> table(n, vector<int>(n));
+  vector<vector<char>> table(n, vector<char>(n));
   int m;
   cin >> m;
   vector<int> must_win(n, (n - 1) / 2);
