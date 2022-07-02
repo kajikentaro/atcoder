@@ -18,7 +18,7 @@ using namespace atcoder;
 using mint = modint1000000007;
 using P = pair<int, int>;
 void full_search(int n, int m) {
-  int ans = -1;
+  int ans = 0;
   vector<vector<int>> items(n, vector<int>(m));
   rep(i, n) {
     string input;
@@ -50,42 +50,47 @@ void full_search(int n, int m) {
   cout << ans << endl;
 }
 
-void do_dp(int n, int m) {
+void do_dp(ll n, ll m) {
   // m is smaller than 23
+
   vector<ll> items(n);
   rep(i, n) {
     string input;
     cin >> input;
     rep(j, m) {
+      items[i] = items[i] << 1;
       if (input[j] - '0') {
-        items[i] << 1;
-        items[i]++;
+        items[i] = items[i] | 1;
       }
     }
   }
 
-  vector<ll> dp(n);
-  dp[0] = 1;
+  vector<ll> dp(1 << m);
 
   rep(i, n) {
-    auto dp_old = dp;
+    vector<ll> dp_old = dp;
     swap(dp_old, dp);
     for (ll bit = 0; bit < (1ll << m); bit++) {
-      dp[bit ^ items[i]] += dp_old[i];
+      if (bit ^ items[i] == 0) {
+        chmax(dp[bit], dp_old[bit ^ items[i]] + 1);
+      } else if (dp_old[bit ^ items[i]] >= 1) {
+        chmax(dp[bit], dp_old[bit ^ items[i]] + 1);
+      }
     }
   }
 
-  cout << dp[0] - 1 << endl;
+  cout << dp[0] << endl;
 }
 
 bool func() {
   int n, m;
   cin >> n >> m;
   if (n + m == 0) return false;
-  if (n <= 23)
+  if (n <= 23) {
     full_search(n, m);
-  else
+  } else {
     do_dp(n, m);
+  }
   return true;
 }
 int main() {
