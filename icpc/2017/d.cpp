@@ -71,7 +71,7 @@ void do_dp(ll n, ll m) {
     vector<ll> dp_old = dp;
     swap(dp_old, dp);
     for (ll bit = 0; bit < (1ll << m); bit++) {
-      if (bit ^ items[i] == 0) {
+      if ((bit ^ items[i]) == 0) {
         chmax(dp[bit], dp_old[bit ^ items[i]] + 1);
       } else if (dp_old[bit ^ items[i]] >= 1) {
         chmax(dp[bit], dp_old[bit ^ items[i]] + 1);
