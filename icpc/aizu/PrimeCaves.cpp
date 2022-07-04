@@ -110,6 +110,8 @@ struct DP {
 
   ll &get(int h, int w) { return dp[h + GRID_SIZE / 2][w + GRID_SIZE / 2]; }
   ll &get(P p) { return dp[p.first + GRID_SIZE / 2][p.second + GRID_SIZE / 2]; }
+
+  void update(P p, ll score) { chmax(get(p), score); }
 };
 
 struct Point {
@@ -125,44 +127,51 @@ bool func() {
   // グリッド作成
   Grid grid(n);
 
-  // 開始位置設定
-  P start = grid.n_to_p[first];
-  queue<Point> que;
-  if (grid.get(start) == PRIME) {
-    que.push(Point{start, 1});
-  } else {
-    que.push(Point{start, 0});
-  }
-
-  // DPテーブル作成
+  // 結果格納用変数
   DP res;
-
   Point ans;
 
-  while (que.size()) {
-    Point now = que.front();
-    que.pop();
-    chmax(res.get(now.p), now.score);
+  // 開始位置設定
+  P start = grid.n_to_p[first];
+  set<P> can;
+  can.insert(start);
+  if (grid.get(start) == PRIME) {
+    res.get(start) = 1;
+    ans.p = start;
+    ans.score = 1;
+  } else {
+    res.get(start) = 0;
+  }
 
-    const P dirs[] = {{1, -1}, {1, 0}, {1, 1}};
-    for (auto d : dirs) {
-      P next_p = now.p;
-      next_p.first += d.first;
-      next_p.second += d.second;
+  while (can.size()) {
+    set<P> can_old;
+    swap(can_old, can);
+    for (auto now : can_old) {
+      ll now_score = res.get(now);
+      const P dirs[] = {{1, -1}, {1, 0}, {1, 1}};
+      for (auto d : dirs) {
+        P next = now;
+        next.first += d.first;
+        next.second += d.second;
 
-      if (grid.get(next_p) == BAN) continue;
-      if (grid.get(next_p) == NORMAL) {
-        que.push(Point{next_p, now.score});
-      }
+        if (grid.get(next) == BAN) continue;
+        if (grid.get(next) == NORMAL) {
+          can.insert(next);
+          res.update(next, now_score);
+        }
+        if (grid.get(next) == PRIME) {
+          ll next_score = now_score + 1;
+          can.insert(next);
+          res.update(next, next_score);
 
-      // 素数の場合
-      que.push(Point{next_p, now.score + 1});
-      if (ans.score < now.score) {
-        ans = now;
-      } else if (ans.score == now.score) {
-        int now_n = grid.p_to_n(now.p);
-        int ans_n = grid.p_to_n(ans.p);
-        if (ans_n < now_n) ans = now;
+          if (ans.score < next_score) {
+            ans = Point{next, next_score};
+          } else if (ans.score == next_score) {
+            int ans_n = grid.p_to_n(ans.p);
+            int next_n = grid.p_to_n(next);
+            if (ans_n < next_n) ans = Point{next, next_score};
+          }
+        }
       }
     }
   }
