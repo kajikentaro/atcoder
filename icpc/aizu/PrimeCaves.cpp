@@ -31,28 +31,33 @@ const int GRID_SIZE = 1e3 + 10;
 const int PRIME = 2;
 const int BAN = 0;
 const int NORMAL = 1;
+
 struct Grid {
-  int n;
-  vector<vector<int>> is_prime;
-  vector<P> n_to_p;
+ private:
   vector<vector<int>> p_to_n_private;
+  vector<vector<int>> is_prime;
+
+ public:
+  int n;
+  vector<P> n_to_p;
+
   Grid(int n) : n(n) {
     is_prime.resize(GRID_SIZE, vector<int>(GRID_SIZE, BAN));
     n_to_p.resize(n + 1);
     p_to_n_private.resize(GRID_SIZE, vector<int>(GRID_SIZE, -1));
     init();
   }
-  int get(int h, int w) {
+  int &get(P p) {
+    return is_prime[p.first + GRID_SIZE / 2][p.second + GRID_SIZE / 2];
+  }
+  int &get(int h, int w) {
     return is_prime[h + GRID_SIZE / 2][w + GRID_SIZE / 2];
   }
-  int p_to_n(int h, int w) {
+  int &p_to_n(int h, int w) {
     return p_to_n_private[h + GRID_SIZE / 2][w + GRID_SIZE / 2];
   }
-  void set_p_to_n(int h, int w, int v) {
-    p_to_n_private[h + GRID_SIZE / 2][w + GRID_SIZE / 2] = v;
-  }
-  void set(int h, int w, int v) {
-    is_prime[h + GRID_SIZE / 2][w + GRID_SIZE / 2] = v;
+  int &p_to_n(P p) {
+    return p_to_n_private[p.first + GRID_SIZE / 2][p.second + GRID_SIZE / 2];
   }
   void init() {
     int hi = 0, wi = 0;
@@ -61,11 +66,11 @@ struct Grid {
     vector<bool> is_composit = calc_prime_list();
     orep(i, n) {
       n_to_p[i] = P{hi, wi};
-      set_p_to_n(hi, wi, i);
+      p_to_n(hi, wi) = i;
       if (is_composit[i]) {
-        set(hi, wi, NORMAL);
+        get(hi, wi) = NORMAL;
       } else {
-        set(hi, wi, PRIME);
+        get(hi, wi) = PRIME;
       }
       P tmp = dirs[(dir_n + 1) % 4];
       if (get(hi + tmp.first, wi + tmp.second) == BAN) {
@@ -96,73 +101,87 @@ void debug_output_vector(vector<ll> dp) {
   cout << endl;
 }
 
+struct DP {
+ private:
+  vector<vector<ll>> dp;
+
+ public:
+  DP() { dp.resize(GRID_SIZE, vector<ll>(GRID_SIZE, -1)); }
+
+  ll &get(int h, int w) { return dp[h + GRID_SIZE / 2][w + GRID_SIZE / 2]; }
+  ll &get(P p) { return dp[p.first + GRID_SIZE / 2][p.second + GRID_SIZE / 2]; }
+
+  void update(P p, ll score) { chmax(get(p), score); }
+};
+
+struct Point {
+  P p;
+  ll score = 0;
+};
+
 bool func() {
   int n, first;
   cin >> n >> first;
   if (n == 0 && first == 0) return false;
+
+  // グリッド作成
   Grid grid(n);
+
+  // 結果格納用変数
+  DP res;
+  Point ans;
+
+  // 開始位置設定
   P start = grid.n_to_p[first];
-  // debug_output_grid(grid);
-
-  P dirs[] = {{-1, -1}, {-1, 0}, {-1, 1}};
-  vector<ll> dp(GRID_SIZE, -1);
-  auto get = [&](int w) { return dp[w + GRID_SIZE / 2]; };
-  auto set = [&](int w, ll val) { dp[w + GRID_SIZE / 2] = val; };
-  int hi = start.first;
-
-  ll ans = 0;
-  ll ans_n = first;
-  if (grid.get(start.first, start.second) == PRIME) {
-    set(start.second, 1);
-    ans = 1;
+  set<P> can;
+  can.insert(start);
+  if (grid.get(start) == PRIME) {
+    res.get(start) = 1;
+    ans.p = start;
+    ans.score = 1;
   } else {
-    set(start.second, 0);
-    ans = 0;
+    res.get(start) = 0;
   }
-  while (1) {
-    // debug_output_vector(dp);
-    vector<ll> dp_old(GRID_SIZE, -1);
-    auto get_old = [&](int w) { return dp_old[w + GRID_SIZE / 2]; };
-    swap(dp, dp_old);
-    int new_hi = hi + 1;
-    if (new_hi >= GRID_SIZE / 2) break;
-    for (int wi = -GRID_SIZE / 2; wi < GRID_SIZE / 2; wi++) {
-      ll score = get_old(wi);
-      if (score == -1) continue;
 
-      bool has_move = false;
+  while (can.size()) {
+    set<P> can_old;
+    swap(can_old, can);
+    for (auto now : can_old) {
+      ll now_score = res.get(now);
+      const P dirs[] = {{1, -1}, {1, 0}, {1, 1}};
       for (auto d : dirs) {
-        int new_wi = wi + d.second;
-        if (new_wi < -GRID_SIZE / 2 || GRID_SIZE / 2 <= new_wi) continue;
-        if (grid.get(new_hi, new_wi) == BAN) continue;
-        if (grid.get(new_hi, new_wi) == PRIME) {
-          if (get(new_wi) < score + 1) {
-            set(new_wi, score + 1);
-          }
-        }
-        if (grid.get(new_hi, new_wi) == NORMAL) {
-          if (get(new_wi) < score) {
-            set(new_wi, score);
-          }
-        }
-        has_move = true;
-      }
+        P next = now;
+        next.first += d.first;
+        next.second += d.second;
 
-      if (!has_move) {
-        int last_n = grid.p_to_n(hi, wi);
-        if (ans < score) {
-          ans = score;
-          ans_n = last_n;
+        if (grid.get(next) == BAN) continue;
+        if (grid.get(next) == NORMAL) {
+          can.insert(next);
+          res.update(next, now_score);
         }
-        if (ans == score && ans_n < last_n) {
-          ans = score;
-          ans_n = last_n;
+        if (grid.get(next) == PRIME) {
+          ll next_score = now_score + 1;
+          can.insert(next);
+          res.update(next, next_score);
+
+          if (ans.score < next_score) {
+            ans = Point{next, next_score};
+          } else if (ans.score == next_score) {
+            int ans_n = grid.p_to_n(ans.p);
+            int next_n = grid.p_to_n(next);
+            if (ans_n < next_n) ans = Point{next, next_score};
+          }
         }
       }
     }
-    hi++;
   }
-  cout << ans << " " << ans_n << endl;
+
+  int ans_n = grid.p_to_n(ans.p);
+  if (ans.score == 0) {
+    cout << "0 0" << endl;
+  } else {
+    cout << ans.score << " " << ans_n << endl;
+  }
 
   return true;
 }
