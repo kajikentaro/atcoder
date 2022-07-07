@@ -17,30 +17,53 @@ using namespace std;
 using namespace atcoder;
 using mint = modint998244353;
 using P = pair<int, int>;
-int is_touch_edge(ll idx, ll length) {
-  if (idx == 1) return 1;
-  if (idx == length) return 1;
-  return 0;
+struct Point {
+  int x, y;
+};
+
+vector<vector<long long>> comb(int n) {
+  vector<vector<long long>> v(n + 1, vector<long long>(n + 1, 0));
+  for (int i = 0; i < v.size(); i++) {
+    v[i][0] = 1;
+    v[i][i] = 1;
+  }
+  for (int j = 1; j < v.size(); j++) {
+    for (int k = 1; k < j; k++) {
+      v[j][k] = (v[j - 1][k - 1] + v[j - 1][k]);
+    }
+  }
+  return v;
 }
+
 int main() {
   ll h, w, k;
   cin >> h >> w >> k;
-  ll sx, sy, gx, gy;
-  cin >> sx >> sy >> gx >> gy;
+  Point s, t;
+  cin >> s.x >> s.y >> t.x >> t.y;
 
-  // dp[真ん中、端、角][スタート位置、距離1の位置、それ以外]
-  vector<vector<mint>> dp(3, vector<mint>(3));
+  // [0]: s, [1]: normal
+  vector<vector<mint>> x(k + 1, vector<mint>(2));
+  vector<vector<mint>> y(k + 1, vector<mint>(2));
 
-  int edge_cnt = is_touch_edge(sx, w);
-  edge_cnt += is_touch_edge(sy, h);
+  x[0][0] = 1;
+  y[0][0] = 1;
+  orep(i, k) {
+    x[i][1] = x[i - 1][0] + (w - 2) * x[i - 1][1];
+    x[i][0] = x[i - 1][1] * (w - 1);
 
-  dp[edge_cnt][0] = 1;
-
-  rep(i, k) {
-    vector<vector<mint>> dp_old(3, vector<mint>(3));
-    swap(dp_old, dp);
-
-    dp[0][1] += dp_old[0][0];
-    dp[0][1] += dp_old[0][0];
+    y[i][1] = y[i - 1][0] + (h - 2) * y[i - 1][1];
+    y[i][0] = y[i - 1][1] * (h - 1);
   }
+  mint ans = 0;
+  int x_idx = s.x != t.x;
+  int y_idx = s.y != t.y;
+
+  vector<vector<ll>> C = comb(k + 10);
+
+  rep(i, k + 1) {
+    ans += C[k][i] * x[i][x_idx] * y[k - i][y_idx];
+    ;
+  }
+
+  cout << ans.val() << endl;
 }
