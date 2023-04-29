@@ -69,16 +69,17 @@ int main() {
 
   int k;
   cin >> k;
-  vector<int> start_list(k);
+  vector<int> Ps(k);
+  vector<int> Ds(k);
   rep(i, k) {
-    int P, D;
-    cin >> P >> D;
-    P--;
-    start_list[i] = P;
+    cin >> Ps[i] >> Ds[i];
+    Ps[i]--;
+  }
 
+  rep(i, k) {
     queue<Q> que;
     used = vector<int>(n, 0);
-    que.emplace(Q{P, D, P});
+    que.emplace(Q{Ps[i], Ds[i], Ps[i]});
 
     while (que.size()) {
       Q tmp = que.front();
@@ -100,9 +101,12 @@ int main() {
         que.emplace(Q{next, d - 1, start});
       }
     }
+  }
 
+  rep(i, k) {
     used = vector<int>(n, 0);
-    que.emplace(Q{P, D, P});
+    queue<Q> que;
+    que.emplace(Q{Ps[i], Ds[i], Ps[i]});
 
     while (que.size()) {
       Q tmp = que.front();
