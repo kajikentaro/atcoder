@@ -16,66 +16,69 @@ bool chmin(T &a, const T &b) {
 using namespace std;
 using namespace atcoder;
 using mint = modint1000000007;
+#define int long long
 using P = pair<int, int>;
 
-struct TODO {
-  int i, j, k;
-};
+int n, m;
+int get_idx(int t_pos, int a_pos) { return t_pos * n + a_pos; }
+
 int sub() {
-  int n, m;
   cin >> n >> m;
+  vector<int> color(n);
+  rep(i, n) cin >> color[i];
 
-  vector<int> c(n);
-  rep(i, n) cin >> c[i];
-
-  vector<vector<int>> path(n);
-  rep(i, n) {
+  vector<vector<int>> path_tmp(n);
+  rep(i, m) {
     int a, b;
     cin >> a >> b;
     a--;
     b--;
-    path[a].push_back(b);
-    path[b].push_back(a);
+    path_tmp[a].push_back(b);
+    path_tmp[b].push_back(a);
   }
 
-  if (c[0] == c[n - 1]) return -1;
+  int n2 = n * n;
 
-  // dp[頂点iについて][1君の色がjのとき][k君が到達可] = 1 or 0
-  vector<vector<vector<int>>> dp(n, vector<vector<int>>(2, vector<int>(2)));
-  dp[0][0][0] = 1;
-  dp[n - 1][0][1] = 1;
+  vector<vector<int>> path(n2);
+  rep(t_pos, n) rep(a_pos, n) {
+    if (color[t_pos] == color[a_pos]) continue;
+    int idx = get_idx(t_pos, a_pos);
 
-  auto isok = [&]() {
-    if (dp[0][0][1] == 1 && dp[n - 1][0][0] == 1) return 1;
-    if (dp[0][1][1] == 1 && dp[n - 1][1][0] == 1) return 1;
-    return 0;
-  };
-
-  int cnt = 0;
-  while (isok() == 0) {
-    cnt++;
-    int isMove = 0;
-    rep(i, n) {
-      rep(j, 2) {
-        vector<TODO> todo;
-        rep(k, 2) {
-          if (dp[i][j][k] == 0) continue;
-          for (auto ii : path[i]) {
-            int color = c[ii];
-            int jj = color != j;
-            int kk = k;
-            dp[ii][jj][kk] = 1;
-            isMove++;
-          }
-        }
+    for (auto new_t_pos : path_tmp[t_pos]) {
+      for (auto new_a_pos : path_tmp[a_pos]) {
+        if (idx == get_idx(new_t_pos, new_a_pos)) continue;
+        if (color[new_t_pos] == color[new_a_pos]) continue;
+        path[idx].emplace_back(get_idx(new_t_pos, new_a_pos));
       }
-      if (isMove == 0) return -1;
     }
   }
-  return cnt;
+
+  // used.resize(n2);
+  // int res = dfs(path, get_idx(0, n - 1), get_idx(n - 1, 0));
+
+  // bfs
+  queue<P> que;
+  que.emplace(P{get_idx(0, n - 1), 0});
+  vector<bool> used(n2);
+
+  while (que.size()) {
+    auto now = que.front();
+    que.pop();
+    if (used[now.first]) continue;
+    used[now.first] = true;
+
+    if (now.first == get_idx(n - 1, 0)) {
+      return now.second;
+    }
+
+    for (auto next : path[now.first]) {
+      que.emplace(P{next, now.second + 1});
+    }
+  }
+  return -1;
 }
 
-int main() {
+signed main() {
   int t;
   cin >> t;
   rep(i, t) cout << sub() << endl;
