@@ -20,6 +20,32 @@ using mint = modint1000000007;
 using P = pair<int, int>;
 
 signed main() {
-  ;
-  ;
+  int n, k;
+  cin >> n >> k;
+  vector<int> a(k);
+  rep(i, k) cin >> a[i];
+
+  int ans = 0;
+  while (1) {
+    {
+      // Takahashi
+      auto takahashi_itr = --upper_bound(a.begin(), a.end(), n);
+      int takahashi = *takahashi_itr;
+      ans += takahashi;
+      n -= takahashi;
+    }
+
+    if (n == 0) break;
+
+    {
+      // Aoki
+      auto aoki_itr = --upper_bound(a.begin(), a.end(), n);
+      int aoki = *aoki_itr;
+      n -= aoki;
+    }
+
+    if (n == 0) break;
+  }
+
+  cout << ans << endl;
 }

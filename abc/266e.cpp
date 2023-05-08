@@ -19,7 +19,29 @@ using namespace atcoder;
 using mint = modint1000000007;
 using P = pair<int, int>;
 
+map<int, double> memo;
+double sub(int n) {
+  if (memo.count(n) != 0) return memo[n];
+
+  if (n == 1) {
+    return 3.5;
+  }
+
+  double next = sub(n - 1);
+  double sum = 0;
+  orep(i, 6) {
+    if (next < i) {
+      sum += i;
+    } else {
+      sum += next;
+    }
+  }
+  return memo[n] = sum / 6;
+}
+
 signed main() {
-  ;
-  ;
+  int n;
+  cin >> n;
+
+  printf("%.10lf\n", sub(n));
 }

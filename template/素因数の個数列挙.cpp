@@ -20,6 +20,13 @@ using mint = modint1000000007;
 using P = pair<int, int>;
 
 signed main() {
-  ;
-  ;
+  ll SEARCH_MAX = 1e7 + 10;
+  vector<int> eratosthenes(SEARCH_MAX);
+  // i * i <= SEARCH_MAXではないので注意
+  for (ll i = 2; i <= SEARCH_MAX; i++) {
+    if (eratosthenes[i] >= 1) continue;
+    for (ll j = i; j < SEARCH_MAX; j += i) {
+      ++eratosthenes[j];
+    }
+  }
 }
