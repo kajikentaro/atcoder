@@ -16,28 +16,22 @@ bool chmin(T &a, const T &b) {
 }
 using namespace std;
 using namespace atcoder;
-using P = pair<int, int>;
 using mint = modint1000000007;
 
 int h, w, t;
-
-int point_to_idx(int hi, int wi) { return hi * w + wi; }
-
-struct Pos {
-  P to;
-  int dist;
-  int isokashi;
-};
-
 vector<string> grid;
-char get_grid(P now) { return grid[now.first][now.second]; }
 
-struct DK {
-  int hi, wi, okashi, time, isokashi;
+struct Path {
+  int to, time;
+  Path(int to, int time) : to(to), time(time) {}
+  Path() {}
 };
 
-bool operator>(const DK &a, const DK &b) { return a.time > b.time; }
-bool operator<(const DK &a, const DK &b) { return a.time < b.time; }
+struct P {
+  int hi, wi;
+  P(int hi, int wi) : hi(hi), wi(wi) {}
+  P() {}
+};
 
 signed main() {
   cin >> h >> w >> t;
@@ -49,12 +43,12 @@ signed main() {
   {
     rep(hi, h) rep(wi, w) {
       if (grid[hi][wi] == 'S') {
-        dictionary[0].first = hi;
-        dictionary[0].second = wi;
+        dictionary[0].hi = hi;
+        dictionary[0].wi = wi;
       }
       if (grid[hi][wi] == 'G') {
-        dictionary[1].first = hi;
-        dictionary[1].second = wi;
+        dictionary[1].hi = hi;
+        dictionary[1].wi = wi;
       }
     }
     rep(hi, h) rep(wi, w) {
@@ -64,70 +58,73 @@ signed main() {
     }
   }
 
-  map<P, vector<Pos>> path;
-  for (auto from : dictionary) {
-    map<P, bool> used;
-    queue<pair<P, int>> que;
-    que.emplace(from, 0);
+  vector<vector<Path>> path(dictionary.size());
+  rep(i, dictionary.size()) {
+    rep(j, dictionary.size()) {
+      if (i == j) continue;
+      struct Now {
+        int hi, wi, time;
+        Now(int _hi, int _wi, int _time) : hi(_hi), wi(_wi), time(_time) {}
+      };
+      vector<vector<bool>> used(h, vector<bool>(w));
+      queue<Now> que;
+      que.emplace(dictionary[i].hi, dictionary[i].wi, 0);
 
-    while (que.size()) {
-      pair<P, int> now = que.front();
-      que.pop();
-      if (used[now.first]) continue;
-      used[now.first] = true;
+      while (que.size()) {
+        Now now = que.front();
+        que.pop();
+        if (used[now.hi][now.wi]) continue;
+        used[now.hi][now.wi] = true;
 
-      if (get_grid(now.first) == 'o') {
-        path[from].push_back(Pos{now.first, now.second, true});
-      }
-      if (get_grid(now.first) == 'S') {
-        path[from].push_back(Pos{now.first, now.second, false});
-      }
-      if (get_grid(now.first) == 'G') {
-        path[from].push_back(Pos{now.first, now.second, false});
-      }
-      int dirs[4][2] = {{0, 1}, {1, 0}, {-1, 0}, {0, -1}};
-      for (auto d : dirs) {
-        pair<P, int> next = now;
-        next.first.first += d[0];
-        next.first.second += d[1];
-        next.second++;
-        if (next.first.first < 0 || next.first.first >= h) continue;
-        if (next.first.second < 0 || next.first.second >= w) continue;
-        if (get_grid(next.first) == '#') continue;
-        que.push(next);
+        if (now.hi == dictionary[j].hi && now.wi == dictionary[j].wi) {
+          path[i].emplace_back(j, now.time);
+        }
+
+        int dirs[4][2] = {{0, 1}, {1, 0}, {-1, 0}, {0, -1}};
+        for (auto d : dirs) {
+          Now next = now;
+          next.hi = now.hi + d[0];
+          next.wi = now.wi + d[1];
+          next.time = now.time + 1;
+          if (next.hi < 0 || next.wi < 0) continue;
+          if (next.hi >= h || next.wi >= w) continue;
+          if (grid[next.hi][next.wi] == '#') continue;
+          que.push(next);
+        }
       }
     }
   }
 
-  priority_queue<DK, vector<DK>, greater<DK>> que;
-  que.push(DK{dictionary[0].first, dictionary[0].second, 0, 0});
-  map<DK, DK> res;
-  while (que.size()) {
-    DK p = que.top();
-    que.pop();
+  int n = dictionary.size();
+  const int inf = 1e9;
+  vector<vector<int>> dp(1 << n, vector<int>(n, inf));
 
-    DK key = p;
-    p.time = 0;
-    p.isokashi = 0;
-    if (res.count(key) != 0) continue;
-    res[key] = p;
-    for (auto i : path[P{p.hi, p.wi}]) {
-      if (p.time + i.dist > t) continue;
-      if (i.isokashi)
-        que.push(DK{i.to.first, i.to.second, p.okashi + 1, p.time + i.dist});
-      else
-        que.push(DK{i.to.first, i.to.second, p.okashi, p.time + i.dist});
+  dp[1 << 0][0] = 0;
+
+  rep(i, 1 << n) {  // 譜面iに対して
+    rep(j, n) {     // jから出発して
+      if (((i >> j) & 1) == 0) continue;
+
+      for (auto next : path[j]) {
+        if (((i >> next.to) & 1) == 1) {
+          // 既に訪れたところにもう一度いかない
+          continue;
+        }
+        chmin(dp[i | (1 << next.to)][next.to], dp[i][j] + next.time);
+      }
     }
   }
 
-  DK fin;
-  fin.hi = dictionary[1].first;
-  fin.wi = dictionary[1].second;
-
-  int ans = 0;
-  rep(i, 20) {
-    fin.okashi = i;
-    if (res.count(fin) > 0) chmax(ans, i);
+  int ans = -1;
+  rep(i, 1 << n) {
+    if (dp[i][1] > t) continue;
+    int score = 0;
+    int ii = i;
+    while (ii != 0) {
+      if (ii % 2) score++;
+      ii /= 2;
+    }
+    chmax(ans, score - 2);
   }
 
   cout << ans << endl;
