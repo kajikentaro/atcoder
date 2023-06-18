@@ -2,9 +2,11 @@
 #define rep(x, y) for (int x = 0; x < y; x++)
 using namespace std;
 int main() {
-  int n;
+  // input
+  int n = 12;
+
+  // main
   vector<int> k;
-  cin >> n;
   for (int i = 1; i * i <= n; i++) {
     if (i * i == n) {
       k.push_back(i);
@@ -13,5 +15,9 @@ int main() {
       k.push_back(n / i);
     }
   }
-  rep(i, k.size()) { cout << k[i] << endl; }
+
+  // output
+  for (auto kk : k) {
+    cout << kk << endl;
+  }
 }

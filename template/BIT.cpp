@@ -27,3 +27,17 @@ struct BIT {
     return s;
   }
 };
+
+int main() {
+  // input
+  int n = 5;
+
+  BIT<int> bit(n);
+  bit.add(0, 1);
+  bit.add(1, 2);
+  bit.add(3, 4);
+  bit.add(1, 1);
+
+  // output
+  cout << bit.sum(4) << endl;
+}

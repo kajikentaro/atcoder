@@ -20,6 +20,7 @@ using mint = modint1000000007;
 using P = pair<int, int>;
 
 signed main() {
+  // main
   ll SEARCH_MAX = 1e7 + 10;
   vector<int> eratosthenes(SEARCH_MAX);
   // i * i <= SEARCH_MAXではないので注意
@@ -29,4 +30,8 @@ signed main() {
       ++eratosthenes[j];
     }
   }
+
+  // output
+  int t = 2 * 2 * 3 * 5 * 11;
+  cout << eratosthenes[t] << endl;  // 4
 }
