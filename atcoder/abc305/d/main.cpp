@@ -23,14 +23,16 @@ signed main() {
   int n;
   cin >> n;
   vector<int> a(n);
-  vector<ll> sum(n);
   rep(i, n) cin >> a[i];
+  vector<int> sum(n);
   rep(i, n) {
     if (i == 0) continue;
-    if (i % 2 == 0) {
-      int now_sleep = a[i] - a[i - 1];
-      sum[i] = sum[i - 1] + now_sleep;
-      if (i + 1 <= n - 1) sum[i + 1] = sum[i];
+    if (i % 2) {
+      // sleep
+      sum[i] = sum[i - 1];
+    } else {
+      // wake up
+      sum[i] = sum[i - 1] + a[i] - a[i - 1];
     }
   }
 
@@ -39,32 +41,23 @@ signed main() {
   rep(i, q) {
     int l, r;
     cin >> l >> r;
-    auto itr_l = lower_bound(a.begin(), a.end(), l);
-    auto itr_r = --upper_bound(a.begin(), a.end(), r);
-    int val_l = *itr_l;
-    int val_r = *itr_r;
-    int idx_l = itr_l - a.begin();
-    int idx_r = itr_r - a.begin();
 
-    int start;
-    if (idx_l % 2 == 0) {
-      // wake up
-      start = sum[idx_l] - (val_l - l);
-    } else {
-      // sleep
-      start = sum[idx_l];
-    }
+    auto calc = [&](int search) {
+      int res;
+      auto idx = --upper_bound(a.begin(), a.end(), search) - a.begin();
+      if (idx % 2) {
+        // sleep
+        res = sum[idx] + (search - a[idx]);
+      } else {
+        // wake up
+        res = sum[idx];
+      }
+      return res;
+    };
 
-    int end;
-    if (idx_r % 2 == 0) {
-      // wake up
-      end = sum[idx_r];
-    } else {
-      // sleep
-      end = sum[idx_r] + (r - val_r);
-    }
-
-    int res = end - start;
-    cout << res << endl;
-  };
+    int rans = calc(r);
+    int lans = calc(l);
+    int ans = rans - lans;
+    cout << ans << endl;
+  }
 }
