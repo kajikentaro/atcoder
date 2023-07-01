@@ -5,6 +5,7 @@
 !ac
 !ac_template.cpp
 !.gitignore
+!bashrc.sh
 a.out
 
 /tmp
