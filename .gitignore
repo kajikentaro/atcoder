@@ -6,5 +6,6 @@
 !.gitignore
 !bashrc.sh
 a.out
+!docker-compose.yaml
 
 /tmp

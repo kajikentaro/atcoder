@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  atcoder:
+    image: kajindowsxp/atcoder:latest
+    working_dir: /app
+    volumes:
+      - .:/app
+    tty: true
