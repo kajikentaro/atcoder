@@ -7,16 +7,16 @@ int main() {
   // main
   vector<ll> prime;
   ll SEARCH_MAX = 1e6 + 10;
-  vector<bool> tmp(SEARCH_MAX);
+  vector<bool> eratosthenes(SEARCH_MAX);
   for (ll i = 2; i * i <= SEARCH_MAX; i++) {
-    if (tmp[i] == true) continue;
+    if (eratosthenes[i] == true) continue;
     for (ll j = i * 2; j < SEARCH_MAX; j += i) {
-      tmp[j] = true;
+      eratosthenes[j] = true;
     }
   }
   rep(i, SEARCH_MAX) {
     if (i < 2) continue;
-    if (tmp[i] == 0) prime.push_back(i);
+    if (eratosthenes[i] == 0) prime.push_back(i);
   }
 
   // output
