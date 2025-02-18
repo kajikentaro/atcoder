@@ -3,6 +3,7 @@
 !*/**/*.*
 !infra/*
 !.gitignore
+!Makefile
 !bashrc.sh
 a.out
 !docker-compose.yaml
