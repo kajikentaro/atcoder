@@ -1,8 +1,7 @@
 *
 !*/
 !*/**/*.*
-!ac
-!ac_template.cpp
+!infra/*
 !.gitignore
 !bashrc.sh
 a.out
