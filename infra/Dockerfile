@@ -61,6 +61,8 @@ ENV LC_ALL ja_JP.UTF-8
 # atcoder-cliの設定
 RUN acc config default-template cpp
 RUN acc config default-test-dirname-format test
+COPY template.json /root/.config/atcoder-cli-nodejs/cpp/template.json
+COPY ac_template.cpp /root/.config/atcoder-cli-nodejs/cpp/main.cpp
 # run these commands before you start
 # $ acc login
 # $ oj login https://beta.atcoder.jp/
