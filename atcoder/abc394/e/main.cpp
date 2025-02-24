@@ -27,22 +27,41 @@ struct P {
 signed main() {
   int n;
   cin >> n;
-  vector<string> path(n);
-  vector<vector<int>> cost(n, vector<int>(n, 1e9));
-  rep(i, n) cin >> path[i];
+  vector<string> c(n);
+  rep(i, n) cin >> c[i];
+
+  vector<vector<int>> dist(n, vector<int>(n, 1e9));
 
   rep(i, n) rep(j, n) {
-    if (path[i][j] != '-') cost[i][j] = 1;
+    if (c[i][j] != '-') dist[i][j] = 1;
+  }
+  rep(i, n) dist[i][i] = 0;
+
+  queue<P> que;
+  rep(i, n) que.emplace(i, i);
+  rep(i, n) rep(j, n) {
+    if (c[i][j] != '-') que.emplace(i, j);
   }
 
-  rep(i, n) rep(j, n) rep(k, n) {
-    if (path[i][j] == path[j][k] && path[j][k] != '-') {
-      chmin(cost[i][j], 2ll);
+  while (que.size()) {
+    auto [from, to] = que.front();
+    que.pop();
+
+    rep(i, n) rep(j, n) {
+      if (c[i][from] == c[to][j] && c[to][j] != '-') {
+        if (chmin(dist[i][j], dist[from][to] + 2)) {
+          que.emplace(i, j);
+        };
+      }
     }
   }
-  rep(i, n) rep(j, n) rep(k, n) rep(l, n) {
-    if (path[i][j] == path[k][l] && path[k][l] != '-' && path[j][k] != '-') {
-      chmin(cost[i][l], 3ll);
+
+  rep(i, n) {
+    rep(j, n) {
+      int ans = dist[i][j] == 1e9 ? -1 : dist[i][j];
+      cout << ans;
+      if (j < n - 1) cout << " ";
     }
+    cout << endl;
   }
 }
