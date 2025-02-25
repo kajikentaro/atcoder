@@ -27,7 +27,12 @@
       "id": "abc390_d",
       "label": "D",
       "title": "Stone XOR",
-      "url": "https://atcoder.jp/contests/abc390/tasks/abc390_d"
+      "url": "https://atcoder.jp/contests/abc390/tasks/abc390_d",
+      "directory": {
+        "path": "d",
+        "testdir": "test",
+        "submit": "main.cpp"
+      }
     },
     {
       "id": "abc390_e",
