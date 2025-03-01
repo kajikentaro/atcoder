@@ -19,7 +19,21 @@ using namespace atcoder;
 using mint = modint1000000007;
 using P = pair<int, int>;
 
+bool sub() {
+  int a, b, c;
+  cin >> a >> b >> c;
+  if (a + b == c) return true;
+  if (a == b + c) return true;
+  if (b == a + c) return true;
+  if (a == b && b == c) return true;
+  return false;
+  ;
+}
+
 signed main() {
-  ;
-  ;
+  if (sub()) {
+    cout << "Yes" << endl;
+  } else {
+    cout << "No" << endl;
+  }
 }

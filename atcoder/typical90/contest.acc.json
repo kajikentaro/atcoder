@@ -368,7 +368,11 @@
       "id": "typical90_bh",
       "label": "060",
       "title": "Chimera（★5）",
-      "url": "https://atcoder.jp/contests/typical90/tasks/typical90_bh"
+      "url": "https://atcoder.jp/contests/typical90/tasks/typical90_bh",
+      "directory": {
+        "path": "060",
+        "submit": "main.cpp"
+      }
     },
     {
       "id": "typical90_bi",

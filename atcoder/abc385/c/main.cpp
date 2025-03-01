@@ -20,6 +20,30 @@ using mint = modint1000000007;
 using P = pair<int, int>;
 
 signed main() {
-  ;
-  ;
+  int n;
+  cin >> n;
+  vector<int> h(n);
+  rep(i, n) cin >> h[i];
+
+  int ans = 1;
+  rep(start, n) {
+    // n log(n)
+    orep(dist, n) {
+      int prev_h = -1;
+      int current_score = 1;
+      for (int cursor = start; cursor < n; cursor += dist) {
+        int now_h = h[cursor];
+        if (now_h == prev_h) {
+          current_score++;
+          chmax(ans, current_score);
+        } else {
+          current_score = 1;
+        }
+
+        prev_h = now_h;
+      }
+    }
+  }
+
+  cout << ans << endl;
 }
