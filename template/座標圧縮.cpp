@@ -2,6 +2,7 @@
 using namespace std;
 #define rep(x, y) for (int x = 0; x < y; x++)
 
+// xの値は圧縮せずにy方向のみ圧縮する
 struct CC {
   vector<int> f;
   vector<int> y_list;
