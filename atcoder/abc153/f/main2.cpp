@@ -19,16 +19,16 @@ using namespace atcoder;
 using mint = modint1000000007;
 using P = pair<int, int>;
 
-// https://betrue12.hateblo.jp/entry/2020/09/23/005940#%E5%8C%BA%E9%96%93%E5%8A%A0%E7%AE%97%E5%8C%BA%E9%96%93%E6%9C%80%E5%A4%A7%E5%80%A4%E5%8F%96%E5%BE%97
 using S = long long;
 using F = long long;
+
 const S INF = 8e18;
+
 S op(S a, S b) { return std::max(a, b); }
 S e() { return -INF; }
 S mapping(F f, S x) { return f + x; }
 F composition(F f, F g) { return f + g; }
 F id() { return 0; }
-using SegTree = lazy_segtree<S, op, e, F, mapping, composition, id>;
 
 struct Monster {
   int x, h;
@@ -54,9 +54,10 @@ signed main() {
   auto comp = [](const Monster &a, const Monster &b) { return a.x < b.x; };
   sort(monsters.begin(), monsters.end(), comp);
 
+  // https://betrue12.hateblo.jp/entry/2020/09/23/005940#%E5%8C%BA%E9%96%93%E5%8A%A0%E7%AE%97%E5%8C%BA%E9%96%93%E6%9C%80%E5%A4%A7%E5%80%A4%E5%8F%96%E5%BE%97
   vector<S> v(n);
   rep(i, n) { v[i] = monsters[i].h; }
-  SegTree seg(v);
+  lazy_segtree<S, op, e, F, mapping, composition, id> seg(v);
 
   int ans = 0;
   int left_most_idx = 0;

@@ -19,66 +19,53 @@ using namespace atcoder;
 using mint = modint1000000007;
 using P = pair<int, int>;
 
+// https://betrue12.hateblo.jp/entry/2020/09/23/005940#%E5%8C%BA%E9%96%93%E5%8A%A0%E7%AE%97%E5%8C%BA%E9%96%93%E6%9C%80%E5%A4%A7%E5%80%A4%E5%8F%96%E5%BE%97
 using S = long long;
 using F = long long;
-
 const S INF = 8e18;
-
 S op(S a, S b) { return std::max(a, b); }
 S e() { return -INF; }
 S mapping(F f, S x) { return f + x; }
 F composition(F f, F g) { return f + g; }
 F id() { return 0; }
+using SegTree = lazy_segtree<S, op, e, F, mapping, composition, id>;
 
 struct Monster {
-  int x, h;
+  int h, x;
 };
 
-// abc153f
 signed main() {
   int n, d, a;
   cin >> n >> d >> a;
 
-  vector<Monster> monsters;
-
+  vector<Monster> mons(n);
   rep(i, n) {
-    int x, h;
-    cin >> x >> h;
-
-    Monster m;
-    m.h = (h + a - 1) / a;
-    m.x = x;
-    monsters.push_back(m);
+    Monster mon;
+    cin >> mon.x >> mon.h;
+    mons[i] = mon;
   }
 
-  auto comp = [](const Monster &a, const Monster &b) { return a.x < b.x; };
-  sort(monsters.begin(), monsters.end(), comp);
+  sort(mons.begin(), mons.end(),
+       [](const Monster &a, const Monster &b) { return a.x < b.x; });
 
-  // https://betrue12.hateblo.jp/entry/2020/09/23/005940#%E5%8C%BA%E9%96%93%E5%8A%A0%E7%AE%97%E5%8C%BA%E9%96%93%E6%9C%80%E5%A4%A7%E5%80%A4%E5%8F%96%E5%BE%97
-  vector<S> v(n);
-  rep(i, n) { v[i] = monsters[i].h; }
-  lazy_segtree<S, op, e, F, mapping, composition, id> seg(v);
+  vector<int> seg_tmp(n);
+  rep(i, n) seg_tmp[i] = mons[i].h;
+  SegTree seg(seg_tmp);
 
   int ans = 0;
-  int left_most_idx = 0;
-  while (left_most_idx < n) {
-    int h = seg.get(left_most_idx);
-    if (h <= 0) {
-      left_most_idx++;
-      continue;
-    }
+  rep(mi, n) {
+    if (seg.get(mi) <= 0) continue;
 
-    int x_right = monsters[left_most_idx].x + d * 2;
-    auto comp2 = [](const int &val, const Monster &a) { return val < a.x; };
-    auto itr = --upper_bound(monsters.begin(), monsters.end(), x_right, comp2);
-    int x_right_idx = itr - monsters.begin();
+    int left = mons[mi].x;
+    int right = left + d * 2;
 
-    // 例えば 1~3の3つの要素に7を加算したいときは、seg.apply(1, 4, 7);
-    seg.apply(left_most_idx, x_right_idx + 1, -h);
-    ans += h;
-
-    left_most_idx++;
+    auto itr = --upper_bound(
+        mons.begin(), mons.end(), right,
+        [](const int &val, const Monster &a) { return val < a.x; });
+    int right_i = itr - mons.begin();
+    int times = (seg.get(mi) + a - 1) / a;
+    seg.apply(mi, min(right_i, n - 1) + 1, -a * times);
+    ans += times;
   }
-
   cout << ans << endl;
 }
