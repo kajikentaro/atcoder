@@ -45,12 +45,15 @@ ll solve() {
   cin >> n >> k;
   string n_str = myto_string(n);
   int ns = count_keta(n);
-  mint dp[ns + 1][k + 1][2] = {};
+  // dp[上からi桁目のとき][popcountがjであり][strictがkである]
+  mint dp[ns + 2][k + 2][2] = {};
   dp[0][0][1] = 1;
 
   rep(keta, ns) {
-    rep(now, k) {
+    rep(now, k + 1) {
+      // この桁を1にするか0にするか
       rep(entry, 2) {
+        // 次のpopcount
         int next = (now + entry);
 
         dp[keta + 1][next][0] += dp[keta][now][0];
