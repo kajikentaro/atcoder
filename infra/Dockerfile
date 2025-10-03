@@ -1,46 +1,47 @@
 # Ubuntuの公式コンテナを軸に環境構築
-FROM ubuntu:20.04
+FROM ubuntu:24.04
 
 # インタラクティブモードにならないようにする
 ARG DEBIAN_FRONTEND=noninteractive
+
 # タイムゾーンを日本に設定
 ENV TZ=Asia/Tokyo
 
 # インフラを整備
-RUN apt-get update && \
-  apt-get install -y zsh time tzdata tree git curl
+RUN apt-get update
+RUN apt-get install -y time tzdata tree git curl
 
-# C++, Python3, PyPy3の3つの環境想定
-RUN apt-get update && \
-  apt-get install -y gcc-9 g++-9 python3.8 python3-pip pypy3 nodejs npm
+# C++
+RUN apt-get install -y gcc-12 g++-12
+RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-12 30 && \
+    update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-12 30
 
-# 一般的なコマンドで使えるように設定
-# e.g. python3.8 main.py => python main.py
-RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 30 && \
-  update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 30 && \
-  update-alternatives --install /usr/bin/python python /usr/bin/python3.8 30 && \
-  update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 30 && \
-  update-alternatives --install /usr/bin/pypy pypy /usr/bin/pypy3 30 && \
-  update-alternatives --install /usr/bin/node node /usr/bin/nodejs 30
+# Node.js
+RUN apt-get install -y nodejs npm
+RUN update-alternatives --install /usr/bin/node node /usr/bin/nodejs 30
+
+# Python3, PyPy3
+RUN apt-get install -y python3.12 python3-pip pypy3
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.12 30 && \
+    update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 30 && \
+    update-alternatives --install /usr/bin/pypy pypy /usr/bin/pypy3 30
 
 # AtCoderでも使えるPythonライブラリをインストール
-RUN pip install numpy==1.18.2 && \
-  pip install scipy==1.4.1 && \
-  pip install scikit-learn==0.22.2.post1 && \
-  pip install numba==0.48.0 && \
-  pip install networkx==2.4
+RUN pip install --break-system-packages \
+    numpy scipy scikit-learn numba networkx
 
 # C++でAtCoder Library(ACL)を使えるようにする
 RUN git clone --depth 1 https://github.com/atcoder/ac-library.git /lib/ac-library
-ENV CPLUS_INCLUDE_PATH /lib/ac-library
+ENV CPLUS_INCLUDE_PATH=/lib/ac-library
 
 # Pythonでの競技プログラミング用データ構造をインストール
-RUN pip install git+https://github.com/hinamimi/ac-library-python && \
-  pip install git+https://github.com/hinamimi/python-sortedcontainers
+RUN pip install --break-system-packages \
+    git+https://github.com/hinamimi/ac-library-python git+https://github.com/hinamimi/python-sortedcontainers
 
 # コンテスト補助アプリケーションをインストール
-RUN pip install online-judge-tools==11.3.0
-RUN npm install -g atcoder-cli@2.1.1
+RUN pip install --break-system-packages online-judge-tools
+
+RUN npm install -g atcoder-cli
 
 # AHC用のRustのinstall
 # RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
@@ -50,13 +51,15 @@ RUN npm install -g atcoder-cli@2.1.1
 RUN apt-get install -y libboost-all-dev
 
 # GDB をインストール
-RUN apt install -y gdb
+RUN apt-get install -y gdb
 
-# 日本語化
-RUN apt-get -y install locales-all
-ENV LANG ja_JP.UTF-8
-ENV LANGUAGE ja_JP:ja
-ENV LC_ALL ja_JP.UTF-8
+# 日本語対応
+RUN apt-get install -y locales && \
+    echo "ja_JP.UTF-8 UTF-8" >> /etc/locale.gen && \
+    locale-gen
+ENV LANG=ja_JP.UTF-8
+ENV LANGUAGE=ja_JP:ja
+ENV LC_ALL=ja_JP.UTF-8
 
 # atcoder-cliの設定
 RUN acc config default-template cpp
