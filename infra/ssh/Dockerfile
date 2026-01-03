@@ -11,5 +11,12 @@ RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin no/' /etc/ssh/s
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
+# Register environment variables again because sshd doesn't extend ENV on Dockerfile
+RUN echo 'TZ="Asia/Tokyo"' >> /etc/environment && \
+    echo 'CPLUS_INCLUDE_PATH="/lib/ac-library"' >> /etc/environment && \
+    echo 'LANG="ja_JP.UTF-8"' >> /etc/environment && \
+    echo 'LANGUAGE="ja_JP:ja"' >> /etc/environment && \
+    echo 'LC_ALL="ja_JP.UTF-8"' >> /etc/environment
+
 EXPOSE 22
 ENTRYPOINT ["/entrypoint.sh"]
